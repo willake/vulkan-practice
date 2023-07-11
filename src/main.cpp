@@ -32,6 +32,25 @@ private:
         createVkInstance();
     }
 
+    static bool valiadateGlfwExtensionSupport(
+        std::vector<const char *> requireds, const std::vector<VkExtensionProperties> supporteds)
+    {
+        uint32_t count = 0;
+
+        for (const auto &required : requireds)
+        {
+            for (const auto &supported : supporteds)
+            {
+                if (strcmp(required, supported.extensionName) == 0)
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count == requireds.size();
+    }
+
     void createVkInstance()
     {
         VkApplicationInfo appInfo{};
@@ -87,6 +106,9 @@ private:
         {
             std::cout << '\t' << extension.extensionName << '\n';
         }
+
+        std::cout << "all required extnesion supported:" << '\n';
+        std::cout << '\t' << std::boolalpha << valiadateGlfwExtensionSupport(requiredExtensions, extensions) << '\n';
     }
 
     void mainLoop()
