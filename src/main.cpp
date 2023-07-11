@@ -32,53 +32,6 @@ private:
         createVkInstance();
     }
 
-    static bool checkGLFWExtensionSupport(
-        std::vector<const char *> requireds, const std::vector<VkExtensionProperties> supporteds)
-    {
-        uint32_t count = 0;
-
-        for (const auto &required : requireds)
-        {
-            for (const auto &supported : supporteds)
-            {
-                if (strcmp(required, supported.extensionName) == 0)
-                {
-                    count++;
-                }
-            }
-        }
-
-        return count == requireds.size();
-    }
-
-    bool checkValidationLayerSupport()
-    {
-        uint32_t layerCount;
-        vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-
-        std::vector<VkLayerProperties> availableLayers(layerCount);
-        vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
-
-        for (const char *layerName : validationLayers)
-        {
-            bool layerFound = false;
-
-            for (const auto &layerProperties : availableLayers)
-            {
-                if (strcmp(layerName, layerProperties.layerName) == 0)
-                {
-                    layerFound = true;
-                    break;
-                }
-            }
-
-            if (!layerFound)
-                return false;
-        }
-
-        return true;
-    }
-
     void createVkInstance()
     {
         if (enableValidationLayers && !checkValidationLayerSupport())
@@ -167,6 +120,53 @@ private:
         glfwDestroyWindow(window);
 
         glfwTerminate();
+    }
+
+    static bool checkGLFWExtensionSupport(
+        std::vector<const char *> requireds, const std::vector<VkExtensionProperties> supporteds)
+    {
+        uint32_t count = 0;
+
+        for (const auto &required : requireds)
+        {
+            for (const auto &supported : supporteds)
+            {
+                if (strcmp(required, supported.extensionName) == 0)
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count == requireds.size();
+    }
+
+    bool checkValidationLayerSupport()
+    {
+        uint32_t layerCount;
+        vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+        std::vector<VkLayerProperties> availableLayers(layerCount);
+        vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+        for (const char *layerName : validationLayers)
+        {
+            bool layerFound = false;
+
+            for (const auto &layerProperties : availableLayers)
+            {
+                if (strcmp(layerName, layerProperties.layerName) == 0)
+                {
+                    layerFound = true;
+                    break;
+                }
+            }
+
+            if (!layerFound)
+                return false;
+        }
+
+        return true;
     }
 
     const uint32_t WIDTH = 800;
