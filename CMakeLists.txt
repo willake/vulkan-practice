@@ -28,9 +28,10 @@ add_subdirectory(lib/glm)
 # Create the executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-if (VULKAN_FOUND)
-    message(STATUS "Found Vulkan. Including and linking...")
-endif(VULKAN_FOUND)
+# Define DEBUG macro in Debug mode
+target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:DEBUG>)
+# Define NDEBUG macro in Release mode
+target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:NDEBUG>)
 
 # Link libraries (if needed)
 # Example: target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
