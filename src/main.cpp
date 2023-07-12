@@ -67,6 +67,7 @@ private:
     {
         createVkInstance();
         setupDebugMessenger();
+        createSurface();
         pickPhysicalDevice();
         createLogicalDevice();
     }
@@ -88,11 +89,20 @@ private:
 
         vkDestroyDevice(device, nullptr);
 
+        vkDestroySurfaceKHR(instance, surface, nullptr);
         vkDestroyInstance(instance, nullptr);
 
         glfwDestroyWindow(window);
 
         glfwTerminate();
+    }
+
+    void createSurface()
+    {
+        if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create window surface!");
+        }
     }
 
     struct QueueFamilyIndices
@@ -385,6 +395,7 @@ private:
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
     VkQueue graphicsQueue;
     VkDevice device;
+    VkSurfaceKHR surface;
 };
 
 int main()
