@@ -179,12 +179,16 @@ private:
 
         createInfo.pEnabledFeatures = &deviceFeatures;
 
-        createInfo.enabledExtensionCount = 0;
+        std::vector<const char *> extensions = {
+            "VK_KHR_portability_subset"};
+
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+        createInfo.ppEnabledExtensionNames = extensions.data();
 
         if (enableValidationLayers)
         {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-            createInfo.ppEnabledExtensionNames = validationLayers.data();
+            createInfo.ppEnabledLayerNames = validationLayers.data();
         }
         else
         {
@@ -294,7 +298,7 @@ private:
         // for MacOS
         createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
-        auto extensions = getRequiredExtensions();
+        auto extensions = getRequiredInstanceExtensions();
 
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
@@ -372,7 +376,7 @@ private:
         return true;
     }
 
-    std::vector<const char *> getRequiredExtensions()
+    std::vector<const char *> getRequiredInstanceExtensions()
     {
         uint32_t glfwExtensionCount = 0;
         const char **glfwExtensions;
@@ -385,6 +389,7 @@ private:
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
             // for MacOS
             extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+            extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
         }
 
         return extensions;
