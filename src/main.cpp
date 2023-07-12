@@ -169,6 +169,8 @@ private:
         {
             throw std::runtime_error("failed to create logical device!");
         }
+
+        vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
     }
 
     void pickPhysicalDevice()
@@ -381,6 +383,7 @@ private:
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+    VkQueue graphicsQueue;
     VkDevice device;
 };
 
