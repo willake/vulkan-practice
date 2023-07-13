@@ -14,6 +14,9 @@ const uint32_t HEIGHT = 600;
 const std::vector<const char *> validationLayers = {
     "VK_LAYER_KHRONOS_validation"};
 
+std::vector<const char *> deviceExtensions = {
+    "VK_KHR_portability_subset", VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
 #else
@@ -179,11 +182,8 @@ private:
 
         createInfo.pEnabledFeatures = &deviceFeatures;
 
-        std::vector<const char *> extensions = {
-            "VK_KHR_portability_subset"};
-
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-        createInfo.ppEnabledExtensionNames = extensions.data();
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+        createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
         if (enableValidationLayers)
         {
@@ -267,6 +267,11 @@ private:
         // Maximum possible size of textures affects graphics quality
         score += deviceProperties.limits.maxImageDimension2D;
 
+        if (checkDeviceExtensionSupport(device))
+        {
+            score += 2000;
+        }
+
         // Application can't function without geometry shaders
         if (!deviceFeatures.geometryShader)
         {
@@ -274,6 +279,24 @@ private:
         }
 
         return score;
+    }
+
+    bool checkDeviceExtensionSupport(VkPhysicalDevice device)
+    {
+        uint32_t extensionCount;
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+        std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+        std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+        for (const auto &extension : availableExtensions)
+        {
+            requiredExtensions.erase(extension.extensionName);
+        }
+
+        return requiredExtensions.empty();
     }
 
     void createVkInstance()
