@@ -78,6 +78,7 @@ private:
         createLogicalDevice();
         createSwapChain();
         createImageViews();
+        createGraphicsPipeline();
     }
 
     void mainLoop()
@@ -110,6 +111,10 @@ private:
         glfwDestroyWindow(window);
 
         glfwTerminate();
+    }
+
+    void createGraphicsPipeline()
+    {
     }
 
     void createSurface()
