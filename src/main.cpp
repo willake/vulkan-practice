@@ -102,8 +102,6 @@ private:
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
         vkDestroyRenderPass(device, renderPass, nullptr);
 
-        vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-
         for (auto imageView : swapChainImageViews)
         {
             vkDestroyImageView(device, imageView, nullptr);
@@ -862,7 +860,6 @@ private:
     VkExtent2D swapChainExtent;
 
     std::vector<VkImageView> swapChainImageViews;
-    VkPipelineLayout pipelineLayout;
 
     VkRenderPass renderPass;
     VkPipelineLayout pipelineLayout;
