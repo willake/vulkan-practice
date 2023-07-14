@@ -141,6 +141,10 @@ private:
         vkWaitForFences(device, 1, &inFlightFence, VK_TRUE, UINT64_MAX);
 
         vkResetFences(device, 1, &inFlightFence);
+
+        uint32_t imageIndex;
+        vkAcquireNextImageKHR(
+            device, swapChain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
     }
 
     void CreateSyncObjects()
