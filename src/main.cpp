@@ -95,6 +95,8 @@ private:
             glfwPollEvents();
             drawFrame();
         }
+
+        vkDeviceWaitIdle(device);
     }
 
     void cleanup()
@@ -186,7 +188,7 @@ private:
         vkQueuePresentKHR(presentQueue, &presentInfo);
     }
 
-    void CreateSyncObjects()
+    void createSyncObjects()
     {
         VkSemaphoreCreateInfo semaphoreInfo{};
         semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
