@@ -108,6 +108,8 @@ private:
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
 
+        cleanupSwapChain();
+
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
         {
             vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
@@ -117,21 +119,9 @@ private:
 
         vkDestroyCommandPool(device, commandPool, nullptr);
 
-        for (auto framebuffer : swapChainFramebuffers)
-        {
-            vkDestroyFramebuffer(device, framebuffer, nullptr);
-        }
-
         vkDestroyPipeline(device, graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
         vkDestroyRenderPass(device, renderPass, nullptr);
-
-        for (auto imageView : swapChainImageViews)
-        {
-            vkDestroyImageView(device, imageView, nullptr);
-        }
-
-        vkDestroySwapchainKHR(device, swapChain, nullptr);
 
         vkDestroyDevice(device, nullptr);
 
@@ -583,6 +573,20 @@ private:
         }
     }
 
+    void cleanupSwapChain()
+    {
+        for (auto framebuffer : swapChainFramebuffers)
+        {
+            vkDestroyFramebuffer(device, framebuffer, nullptr);
+        }
+
+        for (auto imageView : swapChainImageViews)
+        {
+            vkDestroyImageView(device, imageView, nullptr);
+        }
+
+        vkDestroySwapchainKHR(device, swapChain, nullptr);
+    }
     struct SwapChainSupportDetails
     {
         VkSurfaceCapabilitiesKHR capabilities;
@@ -590,6 +594,16 @@ private:
         std::vector<VkPresentModeKHR> presentModes;
     };
 
+    void recreateSwapChain()
+    {
+        vkDeviceWaitIdle(device);
+
+        cleanupSwapChain();
+
+        createSwapChain();
+        createImageViews();
+        createFramebuffers();
+    }
     void createSwapChain()
     {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
