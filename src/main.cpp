@@ -153,7 +153,7 @@ private:
         cleanupSwapChain();
 
         vkDestroyBuffer(device, vertexBuffer, nullptr);
-        vkFreememory(device, vertexBufferMemory, nullptr);
+        vkFreeMemory(device, vertexBufferMemory, nullptr);
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
         {
@@ -304,6 +304,11 @@ private:
         }
 
         vkBindBufferMemory(device, vertexBuffer, vertexBufferMemory, 0);
+
+        void *data;
+        vkMapMemory(device, vertexBufferMemory, 0, bufferInfo.size, 0, &data);
+        memcpy(data, vertices.data(), (size_t)bufferInfo.size());
+        vkUnmapMemory(device, vertexBufferMemory);
     }
 
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
