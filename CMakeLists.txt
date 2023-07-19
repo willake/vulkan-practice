@@ -36,3 +36,13 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:NDEBUG>)
 # Link libraries (if needed)
 # Example: target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBARIES} Vulkan::Vulkan glm::glm)
+
+add_custom_command(TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+            -DTARGET_NAME=${PROJECT_NAME}
+            -DSHADER_PATH=${PROJECT_SOURCE_DIR}/src/shaders
+            -P ${PROJECT_SOURCE_DIR}/compile_shaders.cmake
+    COMMENT "Comipling shaders..."
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
