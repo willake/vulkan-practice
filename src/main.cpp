@@ -307,7 +307,7 @@ private:
 
         void *data;
         vkMapMemory(device, vertexBufferMemory, 0, bufferInfo.size, 0, &data);
-        memcpy(data, vertices.data(), (size_t)bufferInfo.size());
+        memcpy(data, vertices.data(), (size_t)bufferInfo.size);
         vkUnmapMemory(device, vertexBufferMemory);
     }
 
@@ -371,6 +371,10 @@ private:
 
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
+        VkBuffer vertextBuffers[] = {vertexBuffer};
+        VkDeviceSize offsets[] = {0};
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertextBuffers, offsets);
+
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
@@ -385,7 +389,7 @@ private:
         scissor.extent = swapChainExtent;
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-        vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+        vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
 
         vkCmdEndRenderPass(commandBuffer);
 
