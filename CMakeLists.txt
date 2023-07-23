@@ -19,8 +19,10 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_subdirectory(lib/glfw-3.3.8)
 set(GLM_TEST_ENABLE OFF CACHE BOOL "GLM Build unit tests")
 add_subdirectory(lib/glm)
+
 # Set the include directories
 # include_directories(include())
+include_directories(${PROJECT_SOURCE_DIR}/lib/stb)
 
 # Add any additional libraries or dependencies
 # Example: find_package(OpenCV REQUIRED)
