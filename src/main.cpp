@@ -1,11 +1,6 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
-// Optional. define TINYOBJLOADER_USE_MAPBOX_EARCUT gives robust trinagulation. Requires C++11
-// #define TINYOBJLOADER_USE_MAPBOX_EARCUT
-#include "tiny_obj_loader.h"
-
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 // #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
@@ -14,6 +9,11 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+
+#define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
+// Optional. define TINYOBJLOADER_USE_MAPBOX_EARCUT gives robust trinagulation. Requires C++11
+// #define TINYOBJLOADER_USE_MAPBOX_EARCUT
+#include "tiny_obj_loader.h"
 
 #include <chrono>
 
@@ -356,10 +356,10 @@ private:
         ubo.model = glm::rotate(
             glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.view = glm::lookAt(
-            glm::vec3(1.0f, 1.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+            glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.proj = glm::perspective(
             glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
-        ubo.proj[1][1] = -1;
+        ubo.proj[1][1] *= -1;
 
         memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
     }
@@ -1437,14 +1437,12 @@ private:
         else
         {
             createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-            createInfo.queueFamilyIndexCount = 0;     // optional
-            createInfo.pQueueFamilyIndices = nullptr; // optional
+            // createInfo.queueFamilyIndexCount = 0;     // optional
+            // createInfo.pQueueFamilyIndices = nullptr; // optional
         }
 
         createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
-
         createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-
         createInfo.presentMode = presentMode;
         createInfo.clipped = VK_TRUE;
 
@@ -1769,7 +1767,6 @@ private:
         createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
         auto extensions = getRequiredInstanceExtensions();
-
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
