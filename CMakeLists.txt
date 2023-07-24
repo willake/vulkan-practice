@@ -19,8 +19,10 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_subdirectory(lib/glfw-3.3.8)
 set(GLM_TEST_ENABLE OFF CACHE BOOL "GLM Build unit tests")
 add_subdirectory(lib/glm)
+
 # Set the include directories
 # include_directories(include())
+include_directories(${PROJECT_SOURCE_DIR}/lib/stb)
 
 # Add any additional libraries or dependencies
 # Example: find_package(OpenCV REQUIRED)
@@ -36,6 +38,15 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:NDEBUG>)
 # Link libraries (if needed)
 # Example: target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBARIES} Vulkan::Vulkan glm::glm)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} 
+            -DSRC_PATH=${PROJECT_SOURCE_DIR}/assets
+            -DDST_PATH=$<TARGET_FILE_DIR:${PROJECT_NAME}>/
+            -P ${PROJECT_SOURCE_DIR}/copy_assets.cmake
+    COMMENT "Copying assets to target folder..."
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    # $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets) 
 
 add_custom_command(TARGET ${PROJECT_NAME}
     POST_BUILD
