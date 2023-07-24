@@ -23,6 +23,7 @@ add_subdirectory(lib/glm)
 # Set the include directories
 # include_directories(include())
 include_directories(${PROJECT_SOURCE_DIR}/lib/stb)
+include_directories(${PROJECT_SOURCE_DIR}/lib/tinyobjloader)
 
 # Add any additional libraries or dependencies
 # Example: find_package(OpenCV REQUIRED)
