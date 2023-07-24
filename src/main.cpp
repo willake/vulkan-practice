@@ -1437,6 +1437,7 @@ private:
         }
 
         VkPhysicalDeviceFeatures deviceFeatures{};
+        deviceFeatures.samplerAnisotropy = VK_TRUE;
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -1541,6 +1542,12 @@ private:
                 // swap chain support is adequate
                 score += 1000;
             }
+        }
+
+        // check if sampler anisotropy is supported
+        if (deviceFeatures.samplerAnisotropy)
+        {
+            score += 1000;
         }
 
         // Application can't function without geometry shaders
