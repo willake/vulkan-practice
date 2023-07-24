@@ -146,10 +146,10 @@ private:
         createDescriptorSetLayout();
         createGraphicsPipeline();
         createFramebuffers();
+        createCommandPool();
         createTextureImage();
         createTextureImageView();
         createTextureSampler();
-        createCommandPool();
         createVertexBuffer();
         createIndexBuffer();
         createUniformBuffers();
